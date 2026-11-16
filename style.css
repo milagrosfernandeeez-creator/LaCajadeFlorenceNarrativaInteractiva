@@ -1,0 +1,298 @@
+/* =========================================================
+   La caja de Florence — estética vintage / VHS
+   Autoría: Milagros Fernandez · Licencia CC BY-SA 4.0
+   Sin recursos externos: sólo fuentes del sistema.
+   ========================================================= */
+
+:root {
+  --negro: #120e0b;
+  --marron: #2a201a;
+  --papel: #eadfc2;
+  --papel-oscuro: #cdbf9c;
+  --tinta: #2b1f16;
+  --rojo: #c8402f;
+  --rojo-vhs: rgba(255, 40, 70, .65);
+  --cian-vhs: rgba(0, 240, 255, .55);
+  --ambar: #f2b441;
+  --texto: #efe6cf;
+  --suave: #b9ac90;
+  --fuente: "Courier New", Courier, ui-monospace, monospace;
+  --radio: 6px;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at center, #2d231b 0%, var(--negro) 75%) fixed;
+  color: var(--texto);
+  font-family: var(--fuente);
+  font-size: 1.05rem;
+  line-height: 1.65;
+  /* leve desenfoque cromático global del texto */
+  text-shadow: .6px 0 rgba(255, 40, 70, .35), -.6px 0 rgba(0, 240, 255, .3);
+}
+
+a { color: var(--ambar); }
+a:focus-visible, button:focus-visible, summary:focus-visible {
+  outline: 3px solid var(--ambar);
+  outline-offset: 3px;
+}
+
+.salto {
+  position: absolute; left: -999px; top: 0; z-index: 100;
+  background: var(--ambar); color: #000; padding: .5rem 1rem; text-shadow: none;
+}
+.salto:focus { left: 0; }
+
+/* ---------- Capas VHS (decorativas) ---------- */
+/* Líneas de barrido */
+body::before {
+  content: "";
+  position: fixed; inset: 0; z-index: 50; pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 2px,
+    rgba(0, 0, 0, .22) 3px, rgba(0, 0, 0, 0) 4px
+  );
+  mix-blend-mode: multiply;
+}
+/* Ruido de grano + viñeta */
+body::after {
+  content: "";
+  position: fixed; inset: 0; z-index: 51; pointer-events: none;
+  background-image:
+    radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,0,0,.55) 100%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  opacity: .16;
+  animation: grano .6s steps(4) infinite;
+}
+@keyframes grano {
+  0% { background-position: 0 0, 0 0; }
+  25% { background-position: 0 0, -30px 20px; }
+  50% { background-position: 0 0, 25px -35px; }
+  75% { background-position: 0 0, -15px -10px; }
+  100% { background-position: 0 0, 10px 30px; }
+}
+
+/* Banda de "tracking" que sube lentamente */
+.tracking {
+  position: fixed; left: 0; right: 0; height: 90px; z-index: 49; pointer-events: none;
+  background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,.07), rgba(255,255,255,0));
+  animation: tracking 9s linear infinite;
+}
+@keyframes tracking {
+  from { top: 110%; }
+  to { top: -120px; }
+}
+
+/* Parpadeo muy leve de toda la pantalla */
+main, header.portada, footer {
+  animation: flicker 5s infinite;
+}
+@keyframes flicker {
+  0%, 97%, 100% { opacity: 1; }
+  98% { opacity: .93; }
+  99% { opacity: 1; }
+}
+
+/* ---------- OSD (datos en pantalla de VHS) ---------- */
+.osd {
+  position: fixed; left: 0; right: 0; z-index: 60; pointer-events: none;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: .55rem 1rem;
+  font-size: .95rem; letter-spacing: .12em; text-transform: uppercase;
+  color: #fff; text-shadow: 2px 0 var(--rojo-vhs), -2px 0 var(--cian-vhs);
+}
+.osd-arriba { top: 0; background: linear-gradient(rgba(0,0,0,.55), rgba(0,0,0,0)); }
+.osd-abajo { bottom: 0; background: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,.6)); }
+.rec::before { content: "● "; color: #ff3b30; animation: parpadeo 1.2s steps(2) infinite; }
+@keyframes parpadeo { 50% { opacity: 0; } }
+
+/* ---------- Portada ---------- */
+header.portada {
+  padding: 5rem 1rem 2.5rem;
+  text-align: center;
+  border-bottom: 2px dashed var(--papel-oscuro);
+}
+header.portada h1 {
+  margin: 0 0 .6rem;
+  font-size: clamp(2rem, 8vw, 3.8rem);
+  line-height: 1.1;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--papel);
+  text-shadow: 3px 0 var(--rojo-vhs), -3px 0 var(--cian-vhs);
+  animation: glitch 6s infinite;
+}
+@keyframes glitch {
+  0%, 92%, 100% { transform: none; clip-path: none; }
+  93% { transform: translate(-4px, 0); clip-path: inset(10% 0 55% 0); }
+  94% { transform: translate(5px, 0); clip-path: inset(60% 0 10% 0); }
+  95% { transform: translate(-2px, 0); clip-path: none; }
+}
+header.portada .subtitulo { color: var(--ambar); letter-spacing: .2em; text-transform: uppercase; font-size: .9rem; }
+header.portada p { max-width: 40rem; margin: .6rem auto; color: var(--suave); }
+
+/* ---------- Navegación ---------- */
+nav.menu {
+  position: sticky; top: 2.6rem; z-index: 40;
+  display: flex; flex-wrap: wrap; justify-content: center; gap: .4rem;
+  padding: .6rem; background: rgba(18, 14, 11, .92); border-bottom: 1px solid var(--papel-oscuro);
+}
+nav.menu a {
+  padding: .3rem .8rem; border: 1px solid var(--papel-oscuro); border-radius: 2px;
+  text-decoration: none; color: var(--papel); font-size: .9rem; text-transform: uppercase; letter-spacing: .08em;
+}
+nav.menu a:hover { background: var(--papel); color: var(--tinta); text-shadow: none; }
+
+/* ---------- Contenido ---------- */
+main { max-width: 54rem; margin: 0 auto; padding: 1rem 1rem 5rem; }
+section { margin: 3rem 0; scroll-margin-top: 6rem; }
+section h2 {
+  font-size: 1.5rem; text-transform: uppercase; letter-spacing: .08em; color: var(--papel);
+  text-shadow: 2px 0 var(--rojo-vhs), -2px 0 var(--cian-vhs);
+  border-bottom: 2px solid var(--rojo); padding-bottom: .3rem;
+}
+.canal { color: var(--ambar); font-size: .85rem; letter-spacing: .2em; text-transform: uppercase; margin: 0; }
+.nota { color: var(--suave); font-size: .95rem; }
+
+.tarjeta {
+  background: rgba(42, 32, 26, .85);
+  border: 1px solid var(--papel-oscuro);
+  border-radius: var(--radio);
+  padding: 1rem; margin: .8rem 0;
+}
+
+/* ---------- Marco de televisor para el H5P ---------- */
+.tele {
+  background: #3a2c22;
+  border: 4px solid #1b130d;
+  border-radius: 22px;
+  padding: 1rem 1rem 1.6rem;
+  box-shadow: 0 0 0 3px #5a4636, 0 10px 30px rgba(0,0,0,.7), inset 0 0 18px rgba(0,0,0,.6);
+}
+.tele .pantalla {
+  background: #000; border-radius: 14px; overflow: hidden;
+  box-shadow: inset 0 0 40px rgba(0,0,0,.9), 0 0 0 2px #0a0705;
+  position: relative;
+}
+.tele .pantalla iframe { display: block; width: 100%; border: 0; min-height: 340px; }
+.tele .perillas { display: flex; justify-content: flex-end; gap: .6rem; margin-top: .8rem; }
+.tele .perillas span {
+  width: 18px; height: 18px; border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #8a7358, #2a1f16);
+  border: 1px solid #0f0a06;
+}
+.tele .luz { margin-right: auto; font-size: .8rem; letter-spacing: .15em; color: var(--ambar); }
+
+/* ---------- Cintas VHS (documentos) ---------- */
+.estante { display: grid; gap: 1rem; margin-top: 1rem; }
+.cinta { background: transparent; }
+.cinta summary {
+  list-style: none; cursor: pointer;
+  background: var(--papel); color: var(--tinta); text-shadow: none;
+  border: 2px solid #1b130d; border-radius: 4px;
+  padding: .7rem .9rem .7rem 1.1rem;
+  box-shadow: 4px 4px 0 #000;
+  position: relative; display: block;
+}
+.cinta summary::-webkit-details-marker { display: none; }
+.cinta summary::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 10px; background: var(--rojo);
+}
+.cinta summary .num { display: block; font-size: .75rem; letter-spacing: .2em; color: #6d5a42; text-transform: uppercase; }
+.cinta summary .titulo { font-weight: bold; font-size: 1.1rem; text-transform: uppercase; }
+.cinta summary .play { float: right; font-weight: bold; color: var(--rojo); }
+.cinta[open] summary .play::after { content: " ■"; }
+.cinta:not([open]) summary .play::after { content: " ▶"; }
+
+.cinta .cuerpo {
+  margin-top: .6rem; padding: 1rem;
+  background: rgba(0, 0, 0, .55); border-left: 4px solid var(--rojo);
+  animation: estatica .5s steps(5);
+}
+@keyframes estatica {
+  0% { filter: contrast(3) brightness(1.8) blur(1px); opacity: .3; }
+  60% { filter: contrast(1.5) brightness(1.2); opacity: .8; }
+  100% { filter: none; opacity: 1; }
+}
+
+/* ---------- Caminos de Sarah ---------- */
+.caminos { display: grid; gap: 1rem; margin-top: 1rem; }
+.caminos .cinta summary::before { background: var(--ambar); }
+.etiqueta-camino {
+  display: inline-block; font-size: .72rem; letter-spacing: .12em; text-transform: uppercase;
+  background: var(--tinta); color: var(--papel); padding: .05rem .5rem; margin-bottom: .3rem;
+}
+
+/* ---------- Línea de tiempo ---------- */
+.linea { list-style: none; margin: 1rem 0 0; padding: 0 0 0 1.4rem; border-left: 3px solid var(--rojo); }
+.linea li { position: relative; margin: 0 0 1rem; }
+.linea li::before {
+  content: ""; position: absolute; left: -1.95rem; top: .6rem;
+  width: .9rem; height: .9rem; border-radius: 50%; background: var(--ambar); border: 3px solid var(--negro);
+}
+.linea details { background: rgba(42, 32, 26, .85); border: 1px solid var(--papel-oscuro); border-radius: var(--radio); padding: .6rem .8rem; }
+.linea summary { cursor: pointer; font-weight: bold; }
+.linea summary .anio { color: var(--ambar); margin-right: .5rem; }
+.chip {
+  display: inline-block; margin: 0 .4rem 0 0; padding: .05rem .5rem;
+  border: 1px solid; border-radius: 999px; font-size: .72rem;
+  text-transform: uppercase; letter-spacing: .05em; font-weight: normal;
+}
+.chip-marco { color: var(--suave); border-color: var(--suave); }
+.chip-nuevo { color: var(--tinta); background: var(--ambar); border-color: var(--ambar); text-shadow: none; }
+
+/* ---------- Galería de la caja ---------- */
+.galeria { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem; }
+.galeria figure {
+  margin: 0; background: var(--papel); color: var(--tinta); text-shadow: none;
+  padding: .6rem .6rem .8rem; border: 2px solid #000; box-shadow: 4px 4px 0 #000;
+  transform: rotate(-1deg);
+}
+.galeria figure:nth-child(even) { transform: rotate(1.2deg); }
+.galeria img {
+  display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover;
+  filter: grayscale(.9) sepia(.5) contrast(1.1); background: #3a2c22;
+}
+.galeria figcaption { font-size: .9rem; margin-top: .5rem; }
+
+/* ---------- Video dentro de las cintas ---------- */
+.cinta video {
+  display: block; width: 100%; max-height: 70vh; margin: 0 0 .8rem;
+  background: #000; border: 2px solid #000; border-radius: 4px;
+  filter: sepia(.25) contrast(1.05);
+}
+
+/* ---------- Botones ---------- */
+button, .boton {
+  font: inherit; cursor: pointer; padding: .5rem 1rem;
+  background: var(--papel); color: var(--tinta); border: 2px solid #000; border-radius: 3px;
+  text-transform: uppercase; letter-spacing: .08em; font-weight: bold; text-shadow: none;
+  box-shadow: 3px 3px 0 #000;
+}
+button:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 #000; }
+
+/* ---------- Pie ---------- */
+footer { border-top: 2px dashed var(--papel-oscuro); padding: 2rem 1rem 5rem; text-align: center; color: var(--suave); }
+footer .tarjeta { text-align: left; max-width: 54rem; margin: 1rem auto; }
+.lista-creditos { padding-left: 1.2rem; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 520px) {
+  body { font-size: 1rem; }
+  .osd { font-size: .8rem; padding: .4rem .6rem; }
+  header.portada { padding-top: 4.5rem; }
+  .tele { padding: .6rem .6rem 1.2rem; border-radius: 14px; }
+}
+
+/* ---------- Accesibilidad: menos movimiento ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  body::after, .tracking, main, header.portada, footer,
+  header.portada h1, .rec::before, .cinta .cuerpo { animation: none !important; }
+}
